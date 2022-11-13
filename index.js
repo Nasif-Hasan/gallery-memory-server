@@ -56,23 +56,24 @@ async function run() {
             res.send(service)
         })
 
-        app.get('/orders', verifyJWT, async (req, res) => {
-            const decoded = req.decoded
+        app.get('/orders', async (req, res) => {
+            // const decoded = req.decoded
 
+            // console.log('inside area', decoded.email);
+            // console.log(req.query.email);
 
-            console.log('inside area', decoded.email);
+            // if (decoded.email !== req.query.email) {
+            //     res.status(403).send({ message: 'unauthorize' })
+            // }
+
+            // let query = {}
+            // if (req.query.email) {
+            //     query = {
+            //         email: req.query.email
+            //     }
+            // }
             console.log(req.query.email);
-            if (decoded.email !== req.query.email) {
-
-                res.status(403).send({ message: 'unauthorize' })
-            }
-
-            let query = {}
-            if (req.query.email) {
-                query = {
-                    email: req.query.email
-                }
-            }
+            const query = {email:req.query.email}
             const cursor = orderCollection.find(query)
             const orders = await cursor.toArray()
             res.send(orders)
@@ -97,7 +98,7 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/orders/:id', verifyJWT, async (req, res) => {
+        app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const result = await orderCollection.deleteOne(query)
