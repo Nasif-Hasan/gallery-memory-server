@@ -3,17 +3,13 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
-
-
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors())
 app.use(express.json())
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.6hbbzqn.mongodb.net/?retryWrites=true&w=majority`;
-
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 function verifyJWT(req, res, next) {
@@ -57,23 +53,8 @@ async function run() {
         })
 
         app.get('/orders', async (req, res) => {
-            // const decoded = req.decoded
-
-            // console.log('inside area', decoded.email);
-            // console.log(req.query.email);
-
-            // if (decoded.email !== req.query.email) {
-            //     res.status(403).send({ message: 'unauthorize' })
-            // }
-
-            // let query = {}
-            // if (req.query.email) {
-            //     query = {
-            //         email: req.query.email
-            //     }
-            // }
             console.log(req.query.email);
-            const query = {email:req.query.email}
+            const query = { email: req.query.email }
             const cursor = orderCollection.find(query)
             const orders = await cursor.toArray()
             res.send(orders)
@@ -104,22 +85,11 @@ async function run() {
             const result = await orderCollection.deleteOne(query)
             res.send(result)
         })
-
-        // app.delete('/orders/:id', verifyJWT, async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const result = await orderCollection.deleteOne(query);
-        //     res.send(result);
-        // })
-
     }
     finally {
-
     }
 }
-
 run().catch(err => console.error(err))
-
 
 app.get('/', (req, res) => {
     res.send('gallery of memory is running')
